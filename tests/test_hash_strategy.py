@@ -1,5 +1,5 @@
 import pytest
-from src.cache.hash_strategy import Blake2bHashStrategy, XxHashStrategy, ConstantHashStrategy
+from pipeline.cache.hash_strategy import Blake2bHashStrategy, XxHashStrategy, ConstantHashStrategy
 
 
 def test_blake2b_is_deterministic() -> None:

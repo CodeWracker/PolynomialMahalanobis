@@ -1,6 +1,6 @@
 import numpy as np
-from src.cache.shared_direct_mapped import SharedDirectMappedCache
-from src.cache.hash_strategy import ConstantHashStrategy
+from pipeline.cache.shared_direct_mapped import SharedDirectMappedCache
+from pipeline.cache.hash_strategy import ConstantHashStrategy
 
 
 def make_colliding_cache(n_bands: int = 3, dtype: np.dtype = np.uint8) -> "SharedDirectMappedCache":

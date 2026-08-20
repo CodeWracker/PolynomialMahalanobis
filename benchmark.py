@@ -82,11 +82,11 @@ def get_arguments() -> argparse.Namespace:
 
 
 def build_base_command(args: argparse.Namespace) -> list[str]:
-    """Constrói a lista de argumentos base para src/main.py."""
+    """Constrói a lista de argumentos base para o pipeline (pipeline.main)."""
     output_path = os.path.join(args.benchmark_dir, "benchmark_output.tif")
     return [
         "python3",
-        "src/main.py",
+        "-m", "pipeline.main",
         args.input,
         output_path,
         args.conf,

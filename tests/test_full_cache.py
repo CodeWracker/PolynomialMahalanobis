@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
-from src.cache.shared_direct_mapped import SharedDirectMappedCache
-from src.cache.hash_strategy import Blake2bHashStrategy, ConstantHashStrategy
+from pipeline.cache.shared_direct_mapped import SharedDirectMappedCache
+from pipeline.cache.hash_strategy import Blake2bHashStrategy, ConstantHashStrategy
 
 
 def make_tiny_cache(n_bands: int = 3, dtype: np.dtype | np.integer | type = np.uint8) -> SharedDirectMappedCache:

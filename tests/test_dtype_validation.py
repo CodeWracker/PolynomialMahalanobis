@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from unittest.mock import MagicMock
 
-from src.main import validate_and_resolve_dtype
+from pipeline.main import validate_and_resolve_dtype
 
 
 def make_fake_src(dtypes_per_band: list[str]) -> MagicMock:

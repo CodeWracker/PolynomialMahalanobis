@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.main import distances_to_uint8
+from pipeline.main import distances_to_uint8
 
 
 def test_distance_zero_gives_max_similarity_min_value() -> None:

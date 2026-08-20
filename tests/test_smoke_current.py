@@ -9,7 +9,6 @@ import pytest
 TESTS_DIR = Path(__file__).parent
 GOLDEN_DIR = TESTS_DIR / "golden_master"
 FIXTURES_DIR = TESTS_DIR / "fixtures"
-SRC_DIR = TESTS_DIR.parent / "src"
 
 MAX_ACCEPTABLE_DIFF = 1  # erro de arredondamento float32 vs float64
 
@@ -24,12 +23,12 @@ def test_current_pipeline_matches_golden() -> None:
     if not golden_poly.exists():
         pytest.skip("Golden master output 12003-poly.tif nao encontrado")
 
-    from src.compare.outputs import compare_outputs
+    from pipeline.compare.outputs import compare_outputs
 
     with tempfile.NamedTemporaryFile(suffix=".tif") as tmp:
         output_path = tmp.name
         result = subprocess.run(
-            [sys.executable, str(SRC_DIR / "main.py"),
+            [sys.executable, "-m", "pipeline.main",
              str(input_tif), output_path, str(samples), "/dev/null",
              "--order", "3", "--exp", "-1.0", "--tile-size", "1024", "--workers", "4"],
             capture_output=True, text=True, timeout=300,
@@ -54,12 +53,12 @@ def test_single_vs_multi_worker_identical() -> None:
     if not input_tif.exists():
         pytest.skip("Fixture input 12003.tif nao encontrado")
 
-    from src.compare.outputs import compare_outputs
+    from pipeline.compare.outputs import compare_outputs
 
     def run_pipeline(workers: int) -> tempfile.NamedTemporaryFile:
         tmp = tempfile.NamedTemporaryFile(suffix=".tif", delete=False)
         result = subprocess.run(
-            [sys.executable, str(SRC_DIR / "main.py"),
+            [sys.executable, "-m", "pipeline.main",
              str(input_tif), tmp.name, str(samples), "/dev/null",
              "--order", "3", "--exp", "-1.0", "--tile-size", "1024",
              "--workers", str(workers)],
@@ -92,12 +91,12 @@ def test_cache_vs_no_cache_identical() -> None:
     if not input_tif.exists():
         pytest.skip("Fixture input 12003.tif nao encontrado")
 
-    from src.compare.outputs import compare_outputs
+    from pipeline.compare.outputs import compare_outputs
 
     def run_pipeline(shared_cache_mb: int) -> tempfile.NamedTemporaryFile:
         tmp = tempfile.NamedTemporaryFile(suffix=".tif", delete=False)
         result = subprocess.run(
-            [sys.executable, str(SRC_DIR / "main.py"),
+            [sys.executable, "-m", "pipeline.main",
              str(input_tif), tmp.name, str(samples), "/dev/null",
              "--order", "3", "--exp", "-1.0", "--tile-size", "1024",
              "--workers", "4",

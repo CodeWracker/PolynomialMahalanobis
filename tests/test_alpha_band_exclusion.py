@@ -2,7 +2,7 @@
 import pytest
 import rasterio
 from unittest.mock import MagicMock
-from src.main import resolve_band_indices
+from pipeline.main import resolve_band_indices
 
 
 def test_resolve_excludes_alpha_band():

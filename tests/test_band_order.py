@@ -2,7 +2,7 @@ import numpy as np
 from pathlib import Path
 
 from tests.helpers import run_pipeline, write_synthetic_tif
-from src.compare.outputs import compare_outputs
+from pipeline.compare.outputs import compare_outputs
 
 
 def test_band_order_is_respected_not_corrected(tmp_path: Path) -> None:

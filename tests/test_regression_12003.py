@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from tests.helpers import ROOT, run_pipeline
-from src.compare.outputs import compare_outputs
+from pipeline.compare.outputs import compare_outputs
 
 GOLDEN: Path = ROOT / "tests" / "golden_master"
 FIXTURES: Path = ROOT / "tests" / "fixtures"

@@ -2,7 +2,7 @@ from pathlib import Path
 import numpy as np
 
 from tests.helpers import run_pipeline, write_synthetic_tif
-from src.compare.outputs import compare_outputs
+from pipeline.compare.outputs import compare_outputs
 
 
 def test_tiny_cache_end_to_end_matches_no_cache(tmp_path: Path) -> None:

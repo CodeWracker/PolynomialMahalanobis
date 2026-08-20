@@ -31,7 +31,7 @@ class TestIdenticalImages:
     """Two identical images must produce similarity==1.0 and is_identical==True."""
 
     def test_identical_images(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         arr = np.full((H, W), 128, dtype=np.uint8)
         a = tmp_path / "a.tif"
@@ -54,7 +54,7 @@ class TestKnownDiff:
     """Verify known pixel differences are detected correctly."""
 
     def test_uniform_diff_all_pixels(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.full((H, W), 100, dtype=np.uint8)
         b_arr = np.full((H, W), 200, dtype=np.uint8)
@@ -76,7 +76,7 @@ class TestUint8Underflow:
 
     def test_no_uint8_underflow(self, tmp_path: Path) -> None:
         """50 vs 200 must yield max_diff=150, NOT 62 (underflow)."""
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.full((H, W), 50, dtype=np.uint8)
         b_arr = np.full((H, W), 200, dtype=np.uint8)
@@ -101,7 +101,7 @@ class TestTileSizeIndependence:
     """Comparison must give same result regardless of tile_size."""
 
     def test_tile_size_64_vs_128(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.random.randint(0, 256, size=(H, W), dtype=np.uint8)
         b_arr = a_arr.copy()
@@ -127,7 +127,7 @@ class TestDimensionMismatch:
     """Different dimensions must raise ValueError."""
 
     def test_height_mismatch(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.zeros((200, W), dtype=np.uint8)
         b_arr = np.zeros((300, W), dtype=np.uint8)
@@ -140,7 +140,7 @@ class TestDimensionMismatch:
             compare_outputs(str(a), str(b))
 
     def test_width_mismatch(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.zeros((H, 200), dtype=np.uint8)
         b_arr = np.zeros((H, 300), dtype=np.uint8)
@@ -157,7 +157,7 @@ class TestTileCount:
     """Verify tile count matches ceil(h/tile_size) * ceil(w/tile_size)."""
 
     def test_tile_count_256(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         arr = np.zeros((256, 256), dtype=np.uint8)
         a = tmp_path / "a.tif"
@@ -171,7 +171,7 @@ class TestTileCount:
 
     def test_tile_count_non_divisible(self, tmp_path: Path) -> None:
         """300x300 with tile_size=128 → ceil(300/128)=3 → 9 tiles."""
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         arr = np.zeros((H, W), dtype=np.uint8)
         a = tmp_path / "a.tif"
@@ -188,7 +188,7 @@ class TestPartialDiff:
     """Correct similarity for partial pixel differences."""
 
     def test_partial_diff_similarity(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.zeros((H, W), dtype=np.uint8)
         b_arr = np.zeros((H, W), dtype=np.uint8)
@@ -220,7 +220,7 @@ class TestTileCompareResultFields:
     """Verify TileCompareResult has all required fields with correct values."""
 
     def test_tile_fields(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         arr = np.zeros((256, 256), dtype=np.uint8)
         a = tmp_path / "a.tif"
@@ -254,9 +254,8 @@ class TestCLI:
         _write_tif(a, arr)
         _write_tif(b, arr)
 
-        mod_path = Path(__file__).parent.parent / "src" / "compare" / "outputs.py"
         result = subprocess.run(
-            [sys.executable, str(mod_path), str(a), str(b)],
+            [sys.executable, "-m", "pipeline.compare.outputs", str(a), str(b)],
             capture_output=True, text=True,
         )
         assert result.returncode == 0, f"CLI failed: {result.stderr}"
@@ -269,7 +268,7 @@ class TestGlobalMeanDiff:
     """global_mean_diff = sum_abs_diff / total_pixels."""
 
     def test_global_mean_sum(self, tmp_path: Path) -> None:
-        from src.compare.outputs import compare_outputs
+        from pipeline.compare.outputs import compare_outputs
 
         a_arr = np.ones((H, W), dtype=np.uint8) * 10
         b_arr = np.ones((H, W), dtype=np.uint8) * 20

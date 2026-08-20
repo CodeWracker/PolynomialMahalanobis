@@ -15,13 +15,7 @@ from typing import Any
 
 import numpy as np
 
-_SYS_PATH_ADDED = False
 NL = chr(10)
-_SCRIPT_DIR = Path(__file__).resolve().parent
-_SRC = _SCRIPT_DIR / "src"
-if str(_SRC) not in sys.path:
-    sys.path.insert(0, str(_SRC))
-    _SYS_PATH_ADDED = True
 
 
 @dataclass
@@ -41,14 +35,6 @@ class BenchResult:
     diff_pct: float
     max_pixel_diff: int
     mean_diff: float
-
-
-def _ensure_src_path(base_dir: Path) -> None:
-    src = base_dir / "src"
-    if str(src) not in sys.path:
-        sys.path.insert(0, str(src))
-        global _SYS_PATH_ADDED
-        _SYS_PATH_ADDED = True
 
 
 def _build_matrix() -> list[dict[str, Any]]:
@@ -113,7 +99,7 @@ def _run_pipeline(
     output_tif = run_dir / "output.tif"
     audit_json = run_dir / "audit.json"
     cmd: list[str] = [
-        sys.executable, "src/main.py",
+        sys.executable, "-m", "pipeline.main",
         str(input_path), str(output_tif), str(samples_path), str(run_dir / "benchmark.log"),
         "--order", "3",
         "--exp", "-1.0",
@@ -151,7 +137,7 @@ def _compare_with_baseline(
     baseline_tif: Path,
     result_tif: Path,
 ) -> dict[str, float]:
-    from compare.outputs import compare_outputs
+    from pipeline.compare.outputs import compare_outputs
     cmp = compare_outputs(str(baseline_tif), str(result_tif), tile_size=1024)
     return {
         "similarity": cmp.global_similarity,
@@ -345,7 +331,6 @@ def main() -> None:
     samples_path = base_dir / args.samples
     outdir = Path(args.outdir).resolve()
     outdir.mkdir(parents=True, exist_ok=True)
-    _ensure_src_path(base_dir)
     if not input_path.exists():
         print(f"ERROR: input not found: {input_path}", file=sys.stderr)
         sys.exit(1)

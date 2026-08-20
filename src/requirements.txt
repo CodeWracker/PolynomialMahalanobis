@@ -1,0 +1,13 @@
+scikit-learn
+matplotlib
+opencv-python
+tifffile
+imagecodecs
+zarr
+gdal==3.6.2
+threadpoolctl>=3.0
+affine
+rasterio
+pytest>=7.0
+pytest-timeout
+xxhash

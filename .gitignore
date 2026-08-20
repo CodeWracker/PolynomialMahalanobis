@@ -1,0 +1,13 @@
+**/.specs/*
+**/.memory/*
+**/.agents/*
+**/.antigravity/
+**/.opencode/
+**/.goals/
+**/AGENTS.md
+**/opencode.json
+**/skills-lock.json
+**/optimized-handoff.tsoutput_test.tif
+**/orthophoto-ms.tif
+**/__pycache__
+**.log

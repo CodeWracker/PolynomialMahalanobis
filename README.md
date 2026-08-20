@@ -4,11 +4,16 @@ Este projeto é uma implementação em Python do classificador de Distância Pol
 
 O sistema é otimizado para processar imagens grandes (ortomosaicos) de forma eficiente, utilizando paralelismo e processamento em tiles.
 
+O repositório é um workspace uv com dois projetos:
+
+- **`packages/polymahalanobis`**: o algoritmo em si (classe `PolyMahalanobis`), publicado no PyPI e instalável isoladamente com `pip install polymahalanobis` (só depende de `numpy`). Veja `packages/polymahalanobis/src/polymahalanobis/README.md` para o uso da biblioteca sozinha.
+- **`apps/pipeline`**: o pipeline de CLI descrito abaixo, que consome `polymahalanobis` como dependência. Não é publicado no PyPI.
+
 ## O que os programas fazem
 
-- **`src/PolyModel.py`**: Contém a lógica principal do classificador. A classe `PolyMahalanobis` implementa o modelo que aprende as características de um conjunto de amostras e calcula a distância para novos pixels.
+- **`packages/polymahalanobis/src/polymahalanobis/PolyModel.py`**: Contém a lógica principal do classificador. A classe `PolyMahalanobis` implementa o modelo que aprende as características de um conjunto de amostras e calcula a distância para novos pixels.
 
-- **`src/main.py`**: É o programa principal que orquestra o processo. Ele faz o seguinte:
+- **`apps/pipeline/src/pipeline/main.py`**: É o programa principal que orquestra o processo. Ele faz o seguinte:
   1.  Carrega as amostras de referência de um arquivo de texto.
   2.  Treina o modelo `PolyMahalanobis`.
   3.  Lê uma imagem de entrada, que deve ser no formato **`.tif`**.
@@ -38,7 +43,7 @@ Isso troca a coluna 1 (Blue) com a coluna 3 (Red), mantendo a coluna 2 (Green) i
 Para garantir resultados determinísticos, execute com `PYTHONHASHSEED=42`:
 
 ```bash
-PYTHONHASHSEED=42 uv run python3 src/main.py ...
+PYTHONHASHSEED=42 uv run python3 -m pipeline.main ...
 PYTHONHASHSEED=42 uv run pytest tests/
 ```
 
@@ -49,10 +54,10 @@ Isso estabiliza o hash de strings do Python entre execuções. O hash do cache c
 ### Requisitos
 
 - Python 3
-- Dependências gerenciadas via `uv` (fonte de verdade: `pyproject.toml`). Instale com:
+- Dependências gerenciadas via `uv` (fonte de verdade: os `pyproject.toml` de cada projeto do workspace). Instale com:
   ```bash
-  uv sync                    # dependências principais
-  uv sync --group=dev        # + dependências de desenvolvimento
+  uv sync                    # instala packages/polymahalanobis e apps/pipeline (editable)
+  uv sync --group=dev        # + dependências de desenvolvimento (pytest, mypy, etc.)
   ```
 - (Opcional mas recomendado) GDAL para manipulação de GeoTIFFs e criação de overviews.
 
@@ -63,16 +68,16 @@ Para classificar uma imagem, você precisa de:
 1.  Uma **imagem de entrada** no formato `.tif` (ex: `imagem.tif`).
 2.  Um **arquivo de amostras** (ex: `amostras.txt`). Este arquivo deve conter os valores dos pixels de referência, com um pixel por linha e os valores das bandas separados por espaço.
 
-Execute o `main.py` com o seguinte comando:
+Execute o pipeline com o seguinte comando:
 
 ```bash
-uv run python3 src/main.py <imagem_entrada.tif> <imagem_saida.tif> <arquivo_amostras.txt> <arquivo_log.log> [--order ORDEM] [--exp EXP_VALUE] [--tile-size TILE_SIZE] [--workers QTD_WORKERS] [--shared-cache-mb CACHE_MB] [--cache-key-mode EXACT|ROUND] [--cache-key-decimals N] [--hash-strategy BLAKE2B|XXHASH] [--audit-json PATH] [--audit-tile-csv PATH] [--overviews] [--statistics] [--alpha]
+uv run python3 -m pipeline.main <imagem_entrada.tif> <imagem_saida.tif> <arquivo_amostras.txt> <arquivo_log.log> [--order ORDEM] [--exp EXP_VALUE] [--tile-size TILE_SIZE] [--workers QTD_WORKERS] [--shared-cache-mb CACHE_MB] [--cache-key-mode EXACT|ROUND] [--cache-key-decimals N] [--hash-strategy BLAKE2B|XXHASH] [--audit-json PATH] [--audit-tile-csv PATH] [--overviews] [--statistics] [--alpha]
 ```
 
 **Exemplo:**
 
 ```bash
-uv run python3 src/main.py minha_imagem.tif saida.tif amostras.txt novo.log \
+uv run python3 -m pipeline.main minha_imagem.tif saida.tif amostras.txt novo.log \
     --order 3 --exp -1.0 --tile-size 1024 --workers 8 \
     --shared-cache-mb 512 --cache-key-mode exact --hash-strategy blake2b \
     --audit-json audit.json --overviews --statistics --alpha
@@ -92,7 +97,7 @@ uv run python3 src/main.py minha_imagem.tif saida.tif amostras.txt novo.log \
 - **`--shared-cache-mb`** (opcional): Tamanho máximo do cache compartilhado entre workers, em MB. `0` desliga o cache (padrão).
 - **`--cache-key-mode`** (opcional): `exact` (padrão, preserva resultado) ou `round` (aproximado, pode alterar resultado, requer `--cache-key-decimals`).
 - **`--cache-key-decimals`** (opcional): Casas decimais para `--cache-key-mode round`. Mínimo 1. Só válido com `round`.
-- **`--hash-strategy`** (opcional): `blake2b` (padrão) ou `xxhash`.
+- **`--hash-strategy`** (opcional): `blake2b` (padrão) ou `xxhash` (requer instalar o extra `apps/pipeline[fast-hash]`, ex: `uv sync --extra fast-hash`).
 - **`--audit-json`** (opcional): Caminho para salvar relatório de auditoria em JSON.
 - **`--audit-tile-csv`** (opcional): Caminho para salvar métricas por tile em CSV.
 

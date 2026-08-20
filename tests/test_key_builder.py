@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.signatures.key_builder import (
+from pipeline.signatures.key_builder import (
     prepare_for_model,
     make_cache_key_values,
     signature_bytes_for_row,
@@ -98,9 +98,9 @@ class TestSignatureBytes:
 
 class TestInitExports:
     def test_init_exports(self) -> None:
-        from src.signatures import make_cache_key_values as m1
-        from src.signatures import prepare_for_model as m2
-        from src.signatures import signature_bytes_for_row as m3
+        from pipeline.signatures import make_cache_key_values as m1
+        from pipeline.signatures import prepare_for_model as m2
+        from pipeline.signatures import signature_bytes_for_row as m3
         assert callable(m1)
         assert callable(m2)
         assert callable(m3)

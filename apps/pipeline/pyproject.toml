@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pipeline"
+version = "0.1.0"
+description = "Internal parallelized CLI pipeline for classifying multispectral GeoTIFF orthophotos with polymahalanobis. Not published to PyPI."
+requires-python = ">=3.10"
+dependencies = [
+    "polymahalanobis",
+    "numpy>=1.24",
+    "affine",
+    "rasterio",
+    "gdal==3.6.2",
+    "threadpoolctl>=3.0",
+]
+
+[project.optional-dependencies]
+fast-hash = ["xxhash"]
+
+[tool.uv.sources]
+polymahalanobis = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pipeline"]

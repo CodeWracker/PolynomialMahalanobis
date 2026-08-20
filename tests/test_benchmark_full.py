@@ -214,15 +214,6 @@ class TestCompareBaseline:
         assert result["diff_pct"] == pytest.approx(100.0)
 
 
-class TestEnsureSrcPath:
-    def test_src_added_to_path(self, tmp_path: Path) -> None:
-        src_dir = tmp_path / "src"
-        src_dir.mkdir()
-        old_len = len(sys.path)
-        benchmark_full._ensure_src_path(tmp_path)
-        assert str(src_dir) in sys.path
-
-
 class TestGeneratePlots:
     def test_plots_created(self, tmp_path: Path) -> None:
         results = [

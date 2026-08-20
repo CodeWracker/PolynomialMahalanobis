@@ -5,7 +5,6 @@ from pathlib import Path
 TESTS_DIR: Path = Path(__file__).parent
 PROJECT_DIR: Path = TESTS_DIR.parent
 sys.path.insert(0, str(PROJECT_DIR))
-SRC_DIR: Path = PROJECT_DIR / "src"
 GOLDEN_DIR: Path = TESTS_DIR / "golden_master"
 FIXTURES_DIR: Path = TESTS_DIR / "fixtures"
 TEST_CASES_DIR: Path = PROJECT_DIR / "test_cases"

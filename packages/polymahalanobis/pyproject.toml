@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "polymahalanobis"
+version = "0.1.0"
+description = "Polynomial Mahalanobis distance classifier for multivariate/multispectral data"
+readme = "src/polymahalanobis/README.md"
+license = { text = "BSD-3-Clause" }
+requires-python = ">=3.10"
+authors = [
+    { name = "CodeWracker", email = "dev.rodrigofs@gmail.com" },
+]
+keywords = ["mahalanobis", "polynomial", "classifier", "multispectral", "svd", "distance", "anomaly-detection"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy>=1.24",
+]
+
+[project.urls]
+Homepage = "https://github.com/CodeWracker/PolynomialMahalanobis"
+Repository = "https://github.com/CodeWracker/PolynomialMahalanobis"
+Issues = "https://github.com/CodeWracker/PolynomialMahalanobis/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/polymahalanobis"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/polymahalanobis",
+    "LICENSE",
+]

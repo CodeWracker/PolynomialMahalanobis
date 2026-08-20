@@ -14,7 +14,7 @@ def test_hash_strategies_do_not_depend_on_python_hash() -> None:
     (que depende de PYTHONHASHSEED e n\u00e3o \u00e9 est\u00e1vel entre processos).
     """
     import inspect
-    from src.cache import hash_strategy as hs_module
+    from pipeline.cache import hash_strategy as hs_module
 
     source = inspect.getsource(hs_module)
     # builtin hash() n\u00e3o deve aparecer fora de coment\u00e1rios/docstrings \u00f3bvios

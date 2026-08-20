@@ -3,8 +3,8 @@ import csv
 import json
 from pathlib import Path
 
-from src.audit.stats import PipelineStats, TileStats
-from src.audit.writer import write_audit_json, write_tile_csv
+from pipeline.audit.stats import PipelineStats, TileStats
+from pipeline.audit.writer import write_audit_json, write_tile_csv
 
 
 def make_tile_stats(

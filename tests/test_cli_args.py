@@ -1,14 +1,10 @@
 import subprocess
 import sys
-from pathlib import Path
-
-ROOT = Path(__file__).parent.parent
-MAIN = ROOT / "src" / "main.py"
 
 
 def run_main(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, str(MAIN), *args],
+        [sys.executable, "-m", "pipeline.main", *args],
         capture_output=True, text=True,
     )
 

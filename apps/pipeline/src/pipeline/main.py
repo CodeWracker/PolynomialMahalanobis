@@ -27,15 +27,12 @@ import numpy as np
 import rasterio  # type: ignore[import-untyped]
 from rasterio.windows import Window  # type: ignore[import-untyped]
 
-BASE_DIR: str = os.path.dirname(os.path.abspath(__file__))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
+from polymahalanobis import PolyMahalanobis
 
-from PolyModel import PolyMahalanobis
-from cache import NullCache, SharedDirectMappedCache, Blake2bHashStrategy, XxHashStrategy
-from signatures import make_cache_key_values, prepare_for_model
-from audit.stats import TileStats, PipelineStats
-from audit.writer import write_audit_json, write_tile_csv
+from .cache import NullCache, SharedDirectMappedCache, Blake2bHashStrategy, XxHashStrategy
+from .signatures import make_cache_key_values, prepare_for_model
+from .audit.stats import TileStats, PipelineStats
+from .audit.writer import write_audit_json, write_tile_csv
 
 
 class Config:

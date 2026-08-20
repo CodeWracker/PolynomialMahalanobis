@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
-from src.cache.base import BaseCache
-from src.cache.null_cache import NullCache
-from src.cache.shared_direct_mapped import SharedDirectMappedCache
-from src.cache.hash_strategy import Blake2bHashStrategy, ConstantHashStrategy
+from pipeline.cache.base import BaseCache
+from pipeline.cache.null_cache import NullCache
+from pipeline.cache.shared_direct_mapped import SharedDirectMappedCache
+from pipeline.cache.hash_strategy import Blake2bHashStrategy, ConstantHashStrategy
 
 
 # --- NullCache tests ---

@@ -15,7 +15,6 @@ except ImportError:
     rasterio = None  # type: ignore[assignment]
 
 ROOT: Path = Path(__file__).parent.parent
-MAIN_PY: Path = ROOT / "src" / "main.py"
 
 
 def write_synthetic_tif(
@@ -62,13 +61,13 @@ def run_pipeline(
     **kwargs: Any,
 ) -> subprocess.CompletedProcess[str]:
     """
-    Roda src/main.py via subprocess com PYTHONHASHSEED=42 fixo.
+    Roda o pipeline (pipeline.main) via subprocess com PYTHONHASHSEED=42 fixo.
 
     kwargs são convertidos em flags --kwarg-name valor (underscores -> hífen).
     Flags booleanas (True) são passadas sem valor; False é omitida.
     """
     cmd: list[str] = [
-        sys.executable, str(MAIN_PY),
+        sys.executable, "-m", "pipeline.main",
         str(input_tif), str(output_tif), str(samples_txt), str(log),
     ]
     for pair in kwargs.items():

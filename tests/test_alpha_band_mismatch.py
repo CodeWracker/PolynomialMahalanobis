@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 import rasterio
-from src.main import main
+from pipeline.main import main
 
 
 def test_mismatch_raises_value_error(tmp_path):

@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.main import build_cache
+from pipeline.main import build_cache
 
 
 def test_zero_mb_returns_null_cache() -> None:

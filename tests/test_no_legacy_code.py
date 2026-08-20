@@ -1,14 +1,14 @@
-"""Verify no legacy LUT/band-inversion code remains in src/main.py.
+"""Verify no legacy LUT/band-inversion code remains in pipeline/main.py.
 
 Also verifies:
 - PolyModel.py SHA256 against golden master baseline
-- requirements.txt contains required dependencies
+- pyproject.toml files declare required dependencies
 - README.md documents new CLI arguments (cache, audit, hash)
 """
 
 from pathlib import Path
 
-MAIN_PY = Path(__file__).parent.parent / "src" / "main.py"
+MAIN_PY = Path(__file__).parent.parent / "apps" / "pipeline" / "src" / "pipeline" / "main.py"
 
 _LEGACY_PATTERNS: list[str] = [
     "_LUT_VAL",
@@ -33,7 +33,7 @@ def test_no_legacy_code_in_main() -> None:
         if pattern in source:
             found.append(pattern)
     assert not found, (
-        f"Legacy patterns found in src/main.py: {', '.join(found)}"
+        f"Legacy patterns found in pipeline/main.py: {', '.join(found)}"
     )
 
 
@@ -44,7 +44,10 @@ def test_polymodel_file_unchanged() -> None:
     """
     import hashlib
 
-    poly_model_path: Path = Path(__file__).parent.parent / "src" / "PolyModel.py"
+    poly_model_path: Path = (
+        Path(__file__).parent.parent
+        / "packages" / "polymahalanobis" / "src" / "polymahalanobis" / "PolyModel.py"
+    )
     current_hash: str = hashlib.sha256(poly_model_path.read_bytes()).hexdigest()
 
     baseline_file: Path = (
@@ -68,12 +71,18 @@ def test_polymodel_file_unchanged() -> None:
 
 
 def test_requirements_has_new_dependencies() -> None:
-    """requirements.txt must list pytest and xxhash (Goal 07.2)."""
-    content: str = (
-        Path(__file__).parent.parent / "src" / "requirements.txt"
+    """pytest must be declared in the workspace dev group and xxhash in the
+    pipeline app's fast-hash extra (pyproject.toml is the source of truth,
+    superseding the old src/requirements.txt)."""
+    root_pyproject: str = (
+        Path(__file__).parent.parent / "pyproject.toml"
     ).read_text(encoding="utf-8")
-    for dep in ["pytest", "xxhash"]:
-        assert dep in content, f"{dep} ausente em requirements.txt"
+    assert "pytest" in root_pyproject, "pytest ausente no pyproject.toml raiz"
+
+    pipeline_pyproject: str = (
+        Path(__file__).parent.parent / "apps" / "pipeline" / "pyproject.toml"
+    ).read_text(encoding="utf-8")
+    assert "xxhash" in pipeline_pyproject, "xxhash ausente em apps/pipeline/pyproject.toml"
 
 
 def test_readme_documents_cache_args() -> None:

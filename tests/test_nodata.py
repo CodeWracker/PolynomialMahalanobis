@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import rasterio
 
-from src.compare.outputs import compare_outputs
+from pipeline.compare.outputs import compare_outputs
 from tests.helpers import run_pipeline, write_synthetic_tif
 
 
